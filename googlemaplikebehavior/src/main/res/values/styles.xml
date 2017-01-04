@@ -1,0 +1,13 @@
+<resources>
+  <declare-styleable name="GoogleMapLikeBehaviorParam">
+    <attr format="dimension" name="anchorPoint"/>
+    <attr format="dimension" name="peekHeight"/>
+    <attr format="boolean" name="draggable"/>
+    <attr format="boolean" name="skipAnchorPoint"/>
+    <attr format="boolean" name="hideable"/>
+  </declare-styleable>
+
+  <declare-styleable name="ScrollInBehaviorParam">
+    <attr format="string" name="toolbarTitle"/>
+  </declare-styleable>
+</resources>
