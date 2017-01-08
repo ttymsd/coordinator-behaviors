@@ -427,7 +427,6 @@ class GoogleMapLikeBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
     }
     this.state = state
     if (!(this.state == STATE_DRAGGING || this.state == STATE_SETTLING)) {
-      Log.d("AAA", "notify:$state")
       this.listener?.onBehaviorStateChanged(state)
     }
   }
