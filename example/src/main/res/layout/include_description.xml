@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    android:background="@color/colorAccent"
+    app:layout_behavior="jp.bglb.bonboru.behaviors.YoutubeFollowBehavior"
+    app:mediaHeight="200dp"
+    app:shrinkRate="0.5"
+    >
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+    <Button
+        android:id="@+id/wipe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="wipe"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="@string/dummy_text"
+        android:textColor="@android:color/white"
+        />
+  </LinearLayout>
+</ScrollView>
