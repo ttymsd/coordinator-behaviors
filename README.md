@@ -1,18 +1,35 @@
-GoogleMapLikeBehavior
-======================
+Coordinator Behaviors
+=====================
+
+## Demo
+
+<img width="50%" src="art/google_map_behavior.gif">
+<img width="50%" src="art/youtube_behavior.gif">
+
+## Description
+### GoogleMapLikeBehavior
 
 This code base on [CustomBottomSheetBehavior](https://github.com/miguelhincapie/CustomBottomSheetBehavior) rewritten by kotlin and add some features.
 
-### Demo
-
-<img src="art/demo.gif">
-
-### Diff from CustomBottomSheetBehavior
+Diff from CustomBottomSheetBehavior on 2017/01/09
 
 - Don't need Toolbar background as Other View
 - Add some attributes for behaviors
 - Available to skip anchor point.
 - Write by kotlin
+
+### YoutubeLikeBehavior
+
+Improvement points
+
+- Smooth slide out
+- Add margin parameter
+- etc
+
+### Todo
+
+- BottomNavigationBehavior
+- FABBehavior
 
 ### License
 

@@ -1,1 +1,1 @@
-include ':example', ':googlemaplikebehavior'
+include ':example', ':coordinator-behaviors'
