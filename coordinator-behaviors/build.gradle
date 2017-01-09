@@ -49,8 +49,14 @@ task androidSourcesJar(type: Jar) {
   from android.sourceSets.main.java.srcDirs
 }
 
-artifacts {
-  archives androidSourcesJar
+publishing {
+  publications {
+    maven(MavenPublication) {
+      groupId 'jp.bglb.bonboru'
+      artifact androidSourcesJar
+      artifact "$buildDir/outputs/aar/${project.name}-release.aar"
+    }
+  }
 }
 
 bintray {
