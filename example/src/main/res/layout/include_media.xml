@@ -7,6 +7,6 @@
     android:layout_height="200dp"
     android:scaleType="centerCrop"
     android:src="@drawable/frog"
-    app:layout_behavior="jp.bglb.bonboru.behaviors.YoutubeLikeBehavior"
+    app:layout_behavior="@string/coordinator_behaviors_youtube_behavior"
     app:shrinkRate="0.5"
     />

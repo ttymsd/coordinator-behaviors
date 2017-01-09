@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="400dp"
     android:background="@color/colorAccent"
-    app:layout_behavior="jp.bglb.bonboru.behaviors.YoutubeFollowBehavior"
+    app:layout_behavior="@string/coordinator_behaviors_youtube_follow_behavior"
     app:mediaHeight="200dp"
     app:shrinkRate="0.5"
     >
