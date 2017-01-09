@@ -15,7 +15,7 @@ import jp.bglb.bonboru.behaviors.GoogleMapLikeBehavior
 /**
  * Created by Tetsuya Masuda on 2016/12/23.
  */
-class ExampleActivity() : AppCompatActivity() {
+class GoogleMapBehaviorActivity() : AppCompatActivity() {
 
   val toolbar by bindView<Toolbar>(R.id.toolbar)
   val appbar by bindView<AppBarLayout>(R.id.appbar)
