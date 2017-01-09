@@ -31,7 +31,7 @@
       android:layout_width="match_parent"
       android:layout_height="200dp"
       app:anchorPoint="200dp"
-      app:layout_behavior="jp.bglb.bonboru.behaviors.FollowBehavior"
+      app:layout_behavior="@string/coordinator_behaviors_follow_behavior"
       app:peekHeight="100dp"/>
 
   <android.support.v4.widget.NestedScrollView
@@ -42,7 +42,7 @@
       app:anchorPoint="200dp"
       app:draggable="false"
       app:hideable="true"
-      app:layout_behavior="jp.bglb.bonboru.behaviors.GoogleMapLikeBehavior"
+      app:layout_behavior="@string/coordinator_behaviors_google_map_behavior"
       app:peekHeight="100dp"
       app:skipAnchorPoint="false">
 
@@ -90,7 +90,7 @@
       android:theme="@style/AppTheme.AppBarOverlay"
       app:anchorPoint="200dp"
       app:elevation="0dp"
-      app:layout_behavior="jp.bglb.bonboru.behaviors.ScrollOutBehavior"
+      app:layout_behavior="@string/coordinator_behaviors_scroll_out_behavior"
       app:peekHeight="100dp">
 
     <android.support.v7.widget.Toolbar
@@ -108,7 +108,7 @@
       android:theme="@style/AppTheme.AppBarOverlay"
       app:anchorPoint="200dp"
       app:elevation="0dp"
-      app:layout_behavior="jp.bglb.bonboru.behaviors.ScrollInBehavior"
+      app:layout_behavior="@string/coordinator_behaviors_scroll_in_behavior"
       app:peekHeight="100dp"
       app:toolbarTitle="This is dummy text">
 

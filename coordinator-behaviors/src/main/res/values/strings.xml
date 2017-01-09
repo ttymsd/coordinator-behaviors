@@ -1,2 +1,8 @@
 <resources>
+  <string name="coordinator_behaviors_google_map_behavior">jp.bglb.bonboru.behaviors.GoogleMapLikeBehavior</string>
+  <string name="coordinator_behaviors_follow_behavior">jp.bglb.bonboru.behaviors.FollowBehavior</string>
+  <string name="coordinator_behaviors_scroll_in_behavior">jp.bglb.bonboru.behaviors.ScrollInBehavior</string>
+  <string name="coordinator_behaviors_scroll_out_behavior">jp.bglb.bonboru.behaviors.ScrollOutBehavior</string>
+  <string name="coordinator_behaviors_youtube_behavior">jp.bglb.bonboru.behaviors.YoutubeLikeBehavior</string>
+  <string name="coordinator_behaviors_youtube_follow_behavior">jp.bglb.bonboru.behaviors.YoutubeFollowBehavior</string>
 </resources>
