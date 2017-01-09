@@ -29,7 +29,7 @@ android {
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
 
-  compile project(':googlemaplikebehavior')
+  compile project(':coordinator-behaviors')
 
   compile 'com.jakewharton:kotterknife:0.1.0-SNAPSHOT'
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
