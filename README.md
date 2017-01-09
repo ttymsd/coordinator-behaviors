@@ -1,5 +1,7 @@
 Coordinator Behaviors
 =====================
+![License](https://img.shields.io/hexpm/l/plug.svg)
+[ ![Download](https://api.bintray.com/packages/ttymsd/maven/jp.bglb.bonboru%3Acoordinator-behaviors/images/download.svg) ](https://bintray.com/ttymsd/maven/jp.bglb.bonboru%3Acoordinator-behaviors/_latestVersion)
 
 ## Demo
 
@@ -7,6 +9,21 @@ Coordinator Behaviors
 <img width="50%" src="art/youtube_behavior.gif">
 
 ## Description
+### Usage
+
+Add dependency to `build.gradle`.
+
+```gradle
+repositories {
+    maven {
+        url  "http://dl.bintray.com/ttymsd/maven" 
+    }
+}
+dependencies {
+    compile "jp.bglb.bonboru:coordinator-behaviors:$latestVersion"
+}
+```
+
 ### GoogleMapLikeBehavior
 
 This code base on [CustomBottomSheetBehavior](https://github.com/miguelhincapie/CustomBottomSheetBehavior) rewritten by kotlin and add some features.
