@@ -43,7 +43,7 @@ Diff from CustomBottomSheetBehavior on 2017/01/09
 
 This Behavior that makes it possible to drag View like the Youtube app.
 
-This Behavior sample is [here](coordinator-behaviors/example/src/main/kotlin/jp/bglb/bonboru/behaviors/app/YoutubeBehaviorActivity.kt)
+This Behavior sample is [here](https://github.com/ttymsd/coordinator-behaviors/blob/master/example/src/main/kotlin/jp/bglb/bonboru/behaviors/app/YoutubeBehaviorActivity.kt)
 
 ### Todo
 
