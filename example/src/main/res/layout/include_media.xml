@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/media"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="@dimen/media_height"
     android:scaleType="centerCrop"
     android:src="@drawable/frog"
     app:layout_behavior="@string/coordinator_behaviors_youtube_behavior"
