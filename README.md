@@ -40,7 +40,6 @@ Diff from CustomBottomSheetBehavior on 2017/01/09
 Improvement points
 
 - Smooth slide out
-- Add margin parameter
 - etc
 
 ### Todo
