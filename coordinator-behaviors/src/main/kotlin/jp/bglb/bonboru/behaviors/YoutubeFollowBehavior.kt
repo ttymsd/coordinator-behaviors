@@ -15,6 +15,9 @@ class YoutubeFollowBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
 
   private val shrinkRate: Float
   private val mediaHeight: Float
+  private val marginBottom: Int
+  private val marginRight: Int
+
   private var shrinkContentMarginTop = 0
   private var parentHeight = 0
 
@@ -22,6 +25,8 @@ class YoutubeFollowBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
     if (attrs == null) {
       shrinkRate = 0.5f
       mediaHeight = 600f
+      marginBottom = 0
+      marginRight = 0
     } else {
       val youtubeBehaviorParams = context?.obtainStyledAttributes(attrs,
           R.styleable.YoutubeLikeBehaviorParam)!!
@@ -29,6 +34,12 @@ class YoutubeFollowBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
           0.5f)
       mediaHeight = youtubeBehaviorParams.getDimension(
           R.styleable.YoutubeLikeBehaviorParam_mediaHeight, 600f)
+      marginBottom = youtubeBehaviorParams.getDimensionPixelSize(
+          R.styleable.YoutubeLikeBehaviorParam_ylb_marginBottom,
+          0)
+      marginRight = youtubeBehaviorParams.getDimensionPixelSize(
+          R.styleable.YoutubeLikeBehaviorParam_ylb_marginRight,
+          0)
     }
   }
 
@@ -40,7 +51,7 @@ class YoutubeFollowBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
   override fun onLayoutChild(parent: CoordinatorLayout, child: V, layoutDirection: Int): Boolean {
     parentHeight = parent.height
     shrinkContentMarginTop = Math.min(parentHeight,
-        (parentHeight - mediaHeight + mediaHeight * shrinkRate / 2).toInt())
+        (parentHeight - mediaHeight + mediaHeight * shrinkRate / 2).toInt()) - marginBottom
     parent.onLayoutChild(child, layoutDirection)
     ViewCompat.offsetTopAndBottom(child, mediaHeight.toInt())
     return true

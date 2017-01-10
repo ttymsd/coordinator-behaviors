@@ -9,7 +9,6 @@ import android.support.v4.view.ViewCompat
 import android.support.v4.widget.ViewDragHelper
 import android.support.v4.widget.ViewDragHelper.Callback
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
@@ -67,20 +66,30 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
   private var initialY = 0
 
   private val shrinkRate: Float
+  private val marginBottom: Int
+  private val marginRight: Int
+
   private var parentHeight = 0
   private var parentWidth = 0
   private var leftMargin = 0
   private var shrinkMarginTop = 0
 
-
   init {
     if (attrs == null) {
       shrinkRate = 0.5f
+      marginBottom = 0
+      marginRight = 0
     } else {
       val youtubeBehaviorParams = context?.obtainStyledAttributes(attrs,
           R.styleable.YoutubeLikeBehaviorParam)!!
       shrinkRate = youtubeBehaviorParams.getFloat(R.styleable.YoutubeLikeBehaviorParam_shrinkRate,
           0.5f)
+      marginBottom = youtubeBehaviorParams.getDimensionPixelSize(
+          R.styleable.YoutubeLikeBehaviorParam_ylb_marginBottom,
+          0)
+      marginRight = youtubeBehaviorParams.getDimensionPixelSize(
+          R.styleable.YoutubeLikeBehaviorParam_ylb_marginRight,
+          0)
     }
   }
 
@@ -114,11 +123,11 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
 
     parentHeight = parent.height
     parentWidth = parent.width
+    val halfChildHeight = child.height / 2f
     shrinkMarginTop = Math.min(parentHeight,
-        (parentHeight - child.height + child.height * shrinkRate / 2).toInt())
-
-    leftMargin = Math.min(parentWidth,
-        (parentWidth - child.width + child.width * shrinkRate / 2).toInt())
+        (parentHeight - (halfChildHeight * (1 + shrinkRate))).toInt()) - marginBottom
+    // current(2017/01/11) support media width is "screen width" only
+    leftMargin = Math.min(parentWidth, (child.width / 4f).toInt()) - marginRight
 
     when (state) {
       STATE_EXPANDED -> {
@@ -268,7 +277,7 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
       left = 0
     } else if (state == STATE_SHRINK) {
       top = shrinkMarginTop
-      left = (leftMargin - child.width * shrinkRate / 2f).toInt()
+      left = 0
     } else {
       throw IllegalArgumentException("Illegal state argument: " + state)
     }
@@ -303,7 +312,7 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
 
     override fun onViewPositionChanged(changedView: View, left: Int, top: Int, dx: Int, dy: Int) {
       dispatchOnSlide(top)
-      val rate = 1f - top.toFloat() / shrinkMarginTop.toFloat() * shrinkRate
+      val rate = (shrinkRate - 1) / shrinkMarginTop * top.toFloat() + 1
       ViewCompat.setScaleX(changedView, rate)
       ViewCompat.setScaleY(changedView, rate)
       changedView.translationX = (leftMargin * 2f * (1f - rate))
