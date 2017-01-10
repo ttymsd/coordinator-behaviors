@@ -26,6 +26,17 @@
         android:text="reset"
         />
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/dummy_text"
+          />
+    </android.support.v4.widget.NestedScrollView>
   </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
