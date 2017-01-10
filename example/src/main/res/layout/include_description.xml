@@ -7,7 +7,9 @@
     android:background="@color/colorAccent"
     app:layout_behavior="@string/coordinator_behaviors_youtube_follow_behavior"
     app:mediaHeight="200dp"
-    app:shrinkRate="0.5"
+    app:shrinkRate="@integer/media_shrink_rate"
+    app:ylb_marginBottom="@dimen/margin_bottom"
+    app:ylb_marginRight="@dimen/margin_right"
     >
   <LinearLayout
       android:layout_width="match_parent"

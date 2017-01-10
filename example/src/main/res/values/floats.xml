@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <item format="float" name="media_shrink_rate" type="integer">0.5</item>
+  <dimen name="margin_bottom">0dp</dimen>
+  <dimen name="margin_right">0dp</dimen>
+</resources>

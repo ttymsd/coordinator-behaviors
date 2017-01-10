@@ -14,5 +14,7 @@
   <declare-styleable name="YoutubeLikeBehaviorParam">
     <attr format="dimension" name="mediaHeight"/>
     <attr format="float" name="shrinkRate"/>
+    <attr format="dimension" name="ylb_marginBottom"/>
+    <attr format="dimension" name="ylb_marginRight"/>
   </declare-styleable>
 </resources>
