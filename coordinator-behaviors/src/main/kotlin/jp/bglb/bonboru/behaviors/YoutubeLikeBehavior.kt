@@ -67,20 +67,30 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
   private var initialY = 0
 
   private val shrinkRate: Float
+  private val marginBottom: Int
+  private val marginRight: Int
+
   private var parentHeight = 0
   private var parentWidth = 0
   private var leftMargin = 0
   private var shrinkMarginTop = 0
 
-
   init {
     if (attrs == null) {
       shrinkRate = 0.5f
+      marginBottom = 0
+      marginRight = 0
     } else {
       val youtubeBehaviorParams = context?.obtainStyledAttributes(attrs,
           R.styleable.YoutubeLikeBehaviorParam)!!
       shrinkRate = youtubeBehaviorParams.getFloat(R.styleable.YoutubeLikeBehaviorParam_shrinkRate,
           0.5f)
+      marginBottom = youtubeBehaviorParams.getDimensionPixelSize(
+          R.styleable.YoutubeLikeBehaviorParam_ylb_marginBottom,
+          0)
+      marginRight = youtubeBehaviorParams.getDimensionPixelSize(
+          R.styleable.YoutubeLikeBehaviorParam_ylb_marginRight,
+          0)
     }
   }
 
@@ -115,10 +125,10 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
     parentHeight = parent.height
     parentWidth = parent.width
     shrinkMarginTop = Math.min(parentHeight,
-        (parentHeight - child.height + child.height * shrinkRate / 2).toInt())
+        (parentHeight - child.height + child.height * shrinkRate / 2).toInt()) - marginBottom
 
     leftMargin = Math.min(parentWidth,
-        (parentWidth - child.width + child.width * shrinkRate / 2).toInt())
+        (parentWidth - child.width + child.width * shrinkRate / 2).toInt()) - marginRight
 
     when (state) {
       STATE_EXPANDED -> {
