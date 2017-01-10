@@ -26,6 +26,10 @@ dependencies {
 
 ### GoogleMapLikeBehavior
 
+View slide up from bottom as GoogleMapApp.
+
+This Behavior sample is [here](https://github.com/ttymsd/coordinator-behaviors/blob/master/example/src/main/kotlin/jp/bglb/bonboru/behaviors/app/GoogleMapBehaviorActivity.kt)
+
 This code base on [CustomBottomSheetBehavior](https://github.com/miguelhincapie/CustomBottomSheetBehavior) rewritten by kotlin and add some features.
 
 Diff from CustomBottomSheetBehavior on 2017/01/09
@@ -37,10 +41,9 @@ Diff from CustomBottomSheetBehavior on 2017/01/09
 
 ### YoutubeLikeBehavior
 
-Improvement points
+This Behavior that makes it possible to drag View like the Youtube app.
 
-- Smooth slide out
-- etc
+This Behavior sample is [here](https://github.com/ttymsd/coordinator-behaviors/blob/master/example/src/main/kotlin/jp/bglb/bonboru/behaviors/app/YoutubeBehaviorActivity.kt)
 
 ### Todo
 
