@@ -63,6 +63,7 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
   private var activePointerId = MotionEvent.INVALID_POINTER_ID
   private var ignoreEvents = false
   private var draggable = true
+  private var initialX = 0
   private var initialY = 0
 
   private val shrinkRate: Float
@@ -192,7 +193,7 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
       }
 
       MotionEvent.ACTION_DOWN -> {
-        val initialX = ev.x.toInt()
+        initialX = ev.x.toInt()
         initialY = ev.y.toInt()
         ignoreEvents = activePointerId == MotionEvent.INVALID_POINTER_ID
             && !parent.isPointInChildBounds(child, initialX, initialY)
@@ -215,7 +216,7 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
     return action == MotionEvent.ACTION_MOVE
         && !ignoreEvents
         && state != STATE_DRAGGING
-        && Math.abs(initialY - ev.y) > touchSlop
+        && (Math.abs(initialX - ev.x) > touchSlop || Math.abs(initialY - ev.y) > touchSlop)
   }
 
   override fun onTouchEvent(parent: CoordinatorLayout, child: V, ev: MotionEvent): Boolean {
@@ -244,7 +245,8 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
       dragHelper?.let {
         touchSlop = it.touchSlop
       }
-      if (Math.abs(initialY - ev.y) > touchSlop.toFloat()) {
+      if (Math.abs(initialX - ev.x) > touchSlop.toFloat()
+          || Math.abs(initialY - ev.y) > touchSlop.toFloat()) {
         dragHelper?.captureChildView(child, ev.getPointerId(ev.actionIndex))
       }
     }
@@ -299,7 +301,6 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
 
   inner class DragCallback() : Callback() {
 
-    // 対象のviewをdrag可能にするかどうか
     override fun tryCaptureView(child: View?, pointerId: Int): Boolean {
       if (YoutubeLikeBehavior.from(child) == null) {
         return false
