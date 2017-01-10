@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <item format="float" name="media_shrink_rate" type="integer">0.5</item>
-  <dimen name="margin_bottom">0dp</dimen>
-  <dimen name="margin_right">0dp</dimen>
+  <item format="float" name="media_shrink_rate" type="integer">0.4</item>
+  <dimen name="margin_bottom">8dp</dimen>
+  <dimen name="margin_right">6dp</dimen>
+  <dimen name="media_height">200dp</dimen>
+  <dimen name="description_height">400dp</dimen>
 </resources>
