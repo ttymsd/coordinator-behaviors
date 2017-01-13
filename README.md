@@ -5,8 +5,9 @@ Coordinator Behaviors
 
 ## Demo
 
-<img width="50%" src="art/google_map_behavior.gif">
-<img width="50%" src="art/youtube_behavior.gif">
+<img width="33%" src="art/google_map_behavior.gif">
+<img width="33%" src="art/youtube_behavior.gif">
+<img width="33%" src="art/bottom_navigation_behavior.gif">
 
 ## Description
 ### Usage
@@ -45,9 +46,12 @@ This Behavior that makes it possible to drag View like the Youtube app.
 
 This Behavior sample is [here](https://github.com/ttymsd/coordinator-behaviors/blob/master/example/src/main/kotlin/jp/bglb/bonboru/behaviors/app/YoutubeBehaviorActivity.kt)
 
+### BottomNavigationBehavior
+
+This Behavior sample is [here](https://github.com/ttymsd/coordinator-behaviors/blob/master/example/src/main/kotlin/jp/bglb/bonboru/behaviors/app/BottomNavigationActivity.kt)
+
 ### Todo
 
-- BottomNavigationBehavior
 - FABBehavior
 
 ### License
