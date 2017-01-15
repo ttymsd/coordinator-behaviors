@@ -9,7 +9,7 @@ import butterknife.bindView
 /**
  * Created by tetsuya on 2017/01/09.
  */
-class MainActivity() : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
   val googleMap by bindView<Button>(R.id.google_map)
   val youtube by bindView<Button>(R.id.youtube)
