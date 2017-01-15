@@ -13,7 +13,7 @@ class MainActivity() : AppCompatActivity() {
 
   val googleMap by bindView<Button>(R.id.google_map)
   val youtube by bindView<Button>(R.id.youtube)
-  val navigation by bindView<Button>(R.id.botton_navigation)
+  val navigation by bindView<Button>(R.id.bottom_navigation)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
