@@ -8,7 +8,7 @@ import butterknife.bindView
 /**
  * Created by tetsuya on 2017/01/12.
  */
-class BottomNavigationActivity() : AppCompatActivity() {
+class BottomNavigationActivity : AppCompatActivity() {
 
   val toolbar by bindView<Toolbar>(R.id.toolbar)
 
