@@ -7,10 +7,8 @@ import android.content.Context
 import android.support.design.widget.CoordinatorLayout
 import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by tetsuya on 2017/01/12.
@@ -19,13 +17,24 @@ class BottomNavigationBehavior<V : View>(context: Context?,
     attrs: AttributeSet?) : CoordinatorLayout.Behavior<V>(context, attrs) {
 
   companion object {
-    private val SCROLL_UP = 1
-    private val SCROLL_DOWN = -1
+    val SCROLL_UP = 1
+    val SCROLL_DOWN = -1
+
+    @SuppressWarnings("unchecked")
+    fun <V : View> from(view: V?): BottomNavigationBehavior<V>? {
+      if (view == null) return null
+      val params = view.layoutParams as? CoordinatorLayout.LayoutParams ?: throw IllegalArgumentException(
+          "The view is not a child of CoordinatorLayout")
+      return params.behavior as? BottomNavigationBehavior<V>
+    }
   }
 
   private var parentHeight: Int = 0
   private var animating = false
-  private var animatingDirection = 0
+  var animatingDirection = 0
+    private set(value) {
+      field = value
+    }
 
   override fun onLayoutChild(parent: CoordinatorLayout, child: V, layoutDirection: Int): Boolean {
     parentHeight = parent.height

@@ -34,6 +34,18 @@
 
   </android.support.v4.widget.NestedScrollView>
 
+  <android.support.design.widget.FloatingActionButton
+      android:id="@+id/show"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom|right"
+      android:layout_marginBottom="16dp"
+      android:layout_marginRight="16dp"
+      android:src="@drawable/ic_add_white_24dp"
+      app:isScrollOut="true"
+      app:layout_behavior="@string/coordinator_behaviors_fab_behavior"
+      />
+
   <android.support.design.widget.BottomNavigationView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
