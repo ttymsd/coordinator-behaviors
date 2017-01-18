@@ -10,8 +10,27 @@ import android.view.View
 /**
  * Created by tetsuya on 2017/01/15.
  */
-class FabBehavior(context: Context?, attrs: AttributeSet) : FloatingActionButton.Behavior(context,
+class FabBehavior(context: Context?, attrs: AttributeSet?) : FloatingActionButton.Behavior(context,
     attrs) {
+
+  private val isScrollOut: Boolean
+  private var parentHeight = 0
+
+  init {
+    if (attrs == null) {
+      isScrollOut = false
+    } else {
+      val fabBehaviorParams = context?.obtainStyledAttributes(attrs,
+          R.styleable.FabBehaviorParam)!!
+      isScrollOut = fabBehaviorParams.getBoolean(R.styleable.FabBehaviorParam_isScrollOut, false)
+    }
+  }
+
+  override fun onLayoutChild(parent: CoordinatorLayout, child: FloatingActionButton,
+      layoutDirection: Int): Boolean {
+    parentHeight = parent.height
+    return super.onLayoutChild(parent, child, layoutDirection)
+  }
 
   override fun layoutDependsOn(parent: CoordinatorLayout?, child: FloatingActionButton?,
       dependency: View?): Boolean {
@@ -39,6 +58,7 @@ class FabBehavior(context: Context?, attrs: AttributeSet) : FloatingActionButton
   private fun updateFabPosition(dependency: View, child: FloatingActionButton) {
     val top = dependency.y
     val layoutParams = child.layoutParams as CoordinatorLayout.LayoutParams
-    child.y = top - child.height - layoutParams.bottomMargin
+    val rate = if (isScrollOut) (parentHeight - top) / dependency.height else 1f
+    child.y = top - (child.height + layoutParams.bottomMargin) * rate
   }
 }

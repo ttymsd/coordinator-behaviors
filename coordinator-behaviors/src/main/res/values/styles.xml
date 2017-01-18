@@ -17,4 +17,9 @@
     <attr format="dimension" name="ylb_marginBottom"/>
     <attr format="dimension" name="ylb_marginRight"/>
   </declare-styleable>
+
+  <declare-styleable name="FabBehaviorParam">
+    <attr format="boolean" name="isScrollOut"/>
+  </declare-styleable>
+
 </resources>
