@@ -48,11 +48,13 @@ This Behavior sample is [here](https://github.com/ttymsd/coordinator-behaviors/b
 
 ### BottomNavigationBehavior
 
+This Behavior is scollout/in according to scroll.
+
 This Behavior sample is [here](https://github.com/ttymsd/coordinator-behaviors/blob/master/example/src/main/kotlin/jp/bglb/bonboru/behaviors/app/BottomNavigationActivity.kt)
 
-### Todo
+### FabBehavior
 
-- FABBehavior
+This Behavior is scrollout/in accoging to view has `BottomNavigationBehavior` 
 
 ### License
 
