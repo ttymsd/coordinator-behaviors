@@ -33,6 +33,13 @@
         android:text="BottomNavigationBehavior"
         />
 
+    <Button
+        android:id="@+id/panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PanelBehavior"
+        />
+
   </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -7,4 +7,5 @@
   <string name="coordinator_behaviors_youtube_follow_behavior">jp.bglb.bonboru.behaviors.YoutubeFollowBehavior</string>
   <string name="coordinator_behaviors_bottom_navigation_behavior">jp.bglb.bonboru.behaviors.BottomNavigationBehavior</string>
   <string name="coordinator_behaviors_fab_behavior">jp.bglb.bonboru.behaviors.FabBehavior</string>
+  <string name="coordinator_behaviors_panel_behavior">jp.bglb.bonboru.behaviors.PanelBehavior</string>
 </resources>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <TextView
+      android:id="@+id/panel1"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="#ff0000"
+      android:padding="8dp"
+      android:text="@string/dummy_text"
+      app:layout_behavior="@string/coordinator_behaviors_panel_behavior"
+      app:pbm_peekHeight="100dp"
+      app:pbm_position="center"
+      />
+
+  <TextView
+      android:id="@+id/panel2"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="#00ff00"
+      android:padding="8dp"
+      android:text="@string/dummy_text"
+      app:layout_behavior="@string/coordinator_behaviors_panel_behavior"
+      app:pbm_peekHeight="100dp"
+      app:pbm_position="right"
+      />
+
+  <TextView
+      android:id="@+id/panel3"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="#0000ff"
+      android:padding="8dp"
+      android:text="@string/dummy_text"
+      app:layout_behavior="@string/coordinator_behaviors_panel_behavior"
+      app:pbm_peekHeight="100dp"
+      app:pbm_position="left"
+      />
+
+</android.support.design.widget.CoordinatorLayout>

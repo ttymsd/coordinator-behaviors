@@ -6,17 +6,14 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.CoordinatorLayout.Behavior
 import android.support.design.widget.CoordinatorLayout.LayoutParams
 import android.support.v4.view.MotionEventCompat
-import android.support.v4.view.NestedScrollingChild
 import android.support.v4.view.VelocityTrackerCompat
 import android.support.v4.view.ViewCompat
 import android.support.v4.widget.ViewDragHelper
 import android.support.v4.widget.ViewDragHelper.Callback
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
-import android.view.ViewGroup
 import java.lang.ref.WeakReference
 import kotlin.annotation.AnnotationRetention.SOURCE
 
@@ -94,7 +91,6 @@ class GoogleMapLikeBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
     }
   }
 
-  // 委譲されるLayout処理
   override fun onLayoutChild(parent: CoordinatorLayout, child: V, layoutDirection: Int): Boolean {
     if (state != STATE_DRAGGING && state != STATE_SETTLING) {
       if (ViewCompat.getFitsSystemWindows(parent) && !ViewCompat.getFitsSystemWindows(child)) {
@@ -205,7 +201,6 @@ class GoogleMapLikeBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
         && Math.abs(initialY - ev.y) > touchSlop
   }
 
-  // interceptでtrueを返した場合に,CoordinatorLayoutBのscrollを考える
   override fun onTouchEvent(parent: CoordinatorLayout, child: V, ev: MotionEvent): Boolean {
     if (!draggable) {
       return false
@@ -379,28 +374,6 @@ class GoogleMapLikeBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
     }
   }
 
-  /**
-   * view内を再帰的に調べ、NestedScrollingChildが実装されてるViewを探す
-   */
-  private fun findScrollingChild(view: View): View? = when (view) {
-    is NestedScrollingChild -> view
-
-    is ViewGroup -> {
-      var result: View? = null
-      val group = view
-      (0..group.childCount - 1)
-          .map { findScrollingChild(group.getChildAt(it)) }
-          .forEach { v ->
-            v?.let {
-              result = it
-            }
-          }
-      result
-    }
-
-    else -> null
-  }
-
   private fun startSettlingAnimation(child: View, @State state: Long) {
     val top: Int
     if (state == STATE_COLLAPSED) {
@@ -561,16 +534,6 @@ class GoogleMapLikeBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
 
     override fun clampViewPositionHorizontal(child: View, left: Int, dx: Int): Int {
       return child.left
-    }
-
-    private fun constrain(amount: Int, low: Int, high: Int): Int {
-      return if (amount < low) {
-        low
-      } else if (amount > high) {
-        high
-      } else {
-        amount
-      }
     }
 
     override fun getViewVerticalDragRange(child: View?): Int {
