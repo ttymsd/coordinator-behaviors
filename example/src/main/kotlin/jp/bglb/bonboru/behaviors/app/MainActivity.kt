@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
   val googleMap by bindView<Button>(R.id.google_map)
   val youtube by bindView<Button>(R.id.youtube)
   val navigation by bindView<Button>(R.id.bottom_navigation)
+  val vertical by bindView<Button>(R.id.vertical)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -29,6 +30,10 @@ class MainActivity : AppCompatActivity() {
 
     navigation.setOnClickListener {
       startActivity(Intent(this, BottomNavigationActivity::class.java))
+    }
+
+    vertical.setOnClickListener {
+      startActivity(Intent(this, VerticalDraggableBehaviorActivity::class.java))
     }
   }
 }
