@@ -102,7 +102,7 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
     this.state = value
 
     val sheet = viewRef.get()
-    val parent = sheet.parent
+    val parent = sheet?.parent
     parent?.let {
       if (it.isLayoutRequested && ViewCompat.isAttachedToWindow(sheet)) {
         sheet.post {

@@ -367,7 +367,7 @@ class GoogleMapLikeBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
     this.state = value
 
     val sheet = viewRef.get()
-    val parent = sheet.parent
+    val parent = sheet?.parent
     parent?.let {
       if (it.isLayoutRequested && ViewCompat.isAttachedToWindow(sheet)) {
         sheet.post {
