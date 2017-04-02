@@ -16,21 +16,21 @@ import java.lang.ref.WeakReference
 import kotlin.annotation.AnnotationRetention.SOURCE
 
 /**
-* Copyright (C) 2017 Tetsuya Masuda
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-class YoutubeLikeBehavior<V : View>(context: Context?,
+ * Copyright (C) 2017 Tetsuya Masuda
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+class YoutubeLikeBehavior<V : View>(context: Context,
     attrs: AttributeSet?) : CoordinatorLayout.Behavior<V>(context, attrs) {
 
   companion object {
@@ -93,8 +93,8 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
       marginBottom = 0
       marginRight = 0
     } else {
-      val youtubeBehaviorParams = context?.obtainStyledAttributes(attrs,
-          R.styleable.YoutubeLikeBehaviorParam)!!
+      val youtubeBehaviorParams = context.obtainStyledAttributes(attrs,
+          R.styleable.YoutubeLikeBehaviorParam)
       shrinkRate = youtubeBehaviorParams.getFloat(R.styleable.YoutubeLikeBehaviorParam_shrinkRate,
           0.5f)
       marginBottom = youtubeBehaviorParams.getDimensionPixelSize(
@@ -103,6 +103,7 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
       marginRight = youtubeBehaviorParams.getDimensionPixelSize(
           R.styleable.YoutubeLikeBehaviorParam_ylb_marginRight,
           0)
+      youtubeBehaviorParams.recycle()
     }
   }
 
@@ -311,7 +312,7 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
     }
   }
 
-  inner class DragCallback() : Callback() {
+  inner class DragCallback : Callback() {
 
     override fun tryCaptureView(child: View?, pointerId: Int): Boolean {
       if (YoutubeLikeBehavior.from(child) == null) {
@@ -403,14 +404,12 @@ class YoutubeLikeBehavior<V : View>(context: Context?,
       // TODO: notify position to listener
     }
 
-    private fun constrain(amount: Int, low: Int, high: Int): Int {
-      return if (amount < low) {
-        low
-      } else if (amount > high) {
-        high
-      } else {
-        amount
-      }
+    private fun constrain(amount: Int, low: Int, high: Int): Int = if (amount < low) {
+      low
+    } else if (amount > high) {
+      high
+    } else {
+      amount
     }
   }
 

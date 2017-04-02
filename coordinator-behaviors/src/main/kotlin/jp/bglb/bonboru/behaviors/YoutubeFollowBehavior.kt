@@ -8,21 +8,21 @@ import android.util.AttributeSet
 import android.view.View
 
 /**
-* Copyright (C) 2017 Tetsuya Masuda
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-class YoutubeFollowBehavior<V : View>(context: Context?, attrs: AttributeSet?) : Behavior<V>(
+ * Copyright (C) 2017 Tetsuya Masuda
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+class YoutubeFollowBehavior<V : View>(context: Context, attrs: AttributeSet?) : Behavior<V>(
     context, attrs) {
 
   private val shrinkRate: Float
@@ -40,8 +40,8 @@ class YoutubeFollowBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
       marginBottom = 0
       marginRight = 0
     } else {
-      val youtubeBehaviorParams = context?.obtainStyledAttributes(attrs,
-          R.styleable.YoutubeLikeBehaviorParam)!!
+      val youtubeBehaviorParams = context.obtainStyledAttributes(attrs,
+          R.styleable.YoutubeLikeBehaviorParam)
       shrinkRate = youtubeBehaviorParams.getFloat(R.styleable.YoutubeLikeBehaviorParam_shrinkRate,
           0.5f)
       mediaHeight = youtubeBehaviorParams.getDimension(
@@ -52,13 +52,12 @@ class YoutubeFollowBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
       marginRight = youtubeBehaviorParams.getDimensionPixelSize(
           R.styleable.YoutubeLikeBehaviorParam_ylb_marginRight,
           0)
+      youtubeBehaviorParams.recycle()
     }
   }
 
-  override fun layoutDependsOn(parent: CoordinatorLayout?, child: V, dependency: View?): Boolean {
-    val behavior = YoutubeLikeBehavior.from(dependency)
-    return behavior != null
-  }
+  override fun layoutDependsOn(parent: CoordinatorLayout?, child: V, dependency: View?): Boolean
+      = YoutubeLikeBehavior.from(dependency) != null
 
   override fun onLayoutChild(parent: CoordinatorLayout, child: V, layoutDirection: Int): Boolean {
     parentHeight = parent.height
