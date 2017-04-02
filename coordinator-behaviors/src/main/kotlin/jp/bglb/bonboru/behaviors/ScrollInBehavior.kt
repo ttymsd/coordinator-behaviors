@@ -9,23 +9,22 @@ import android.util.AttributeSet
 import android.view.View
 
 /**
-* Copyright (C) 2017 Tetsuya Masuda
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (C) 2017 Tetsuya Masuda
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 class ScrollInBehavior<V : View>(context: Context, attrs: AttributeSet?) : Behavior<V>(context,
     attrs) {
-  var initialized = false
   var peekHeight = 300
   var anchorPointY = 600
   var currentChildY = 0
@@ -38,23 +37,21 @@ class ScrollInBehavior<V : View>(context: Context, attrs: AttributeSet?) : Behav
     attrs?.let {
       val googleMapLikeBehaviorParam = context.obtainStyledAttributes(it,
           R.styleable.GoogleMapLikeBehaviorParam)
-      peekHeight = googleMapLikeBehaviorParam?.getDimensionPixelSize(
-          R.styleable.GoogleMapLikeBehaviorParam_peekHeight, 0)!!
-      anchorTopMargin = googleMapLikeBehaviorParam?.getDimensionPixelSize(
-          R.styleable.GoogleMapLikeBehaviorParam_anchorPoint, 0)!!
+      peekHeight = googleMapLikeBehaviorParam.getDimensionPixelSize(
+          R.styleable.GoogleMapLikeBehaviorParam_peekHeight, 0)
+      anchorTopMargin = googleMapLikeBehaviorParam.getDimensionPixelSize(
+          R.styleable.GoogleMapLikeBehaviorParam_anchorPoint, 0)
+      googleMapLikeBehaviorParam.recycle()
 
       val scrollInBehaviorParam = context.obtainStyledAttributes(it,
           R.styleable.ScrollInBehaviorParam)
       title = scrollInBehaviorParam?.getString(R.styleable.ScrollInBehaviorParam_toolbarTitle)!!
-      googleMapLikeBehaviorParam?.recycle()
-      scrollInBehaviorParam?.recycle()
+      scrollInBehaviorParam.recycle()
     }
   }
 
-  override fun layoutDependsOn(parent: CoordinatorLayout?, child: V, dependency: View?): Boolean {
-    val behavior = GoogleMapLikeBehavior.from(dependency)
-    return behavior != null
-  }
+  override fun layoutDependsOn(parent: CoordinatorLayout?, child: V,
+      dependency: View?): Boolean = GoogleMapLikeBehavior.from(dependency) != null
 
   override fun onLayoutChild(parent: CoordinatorLayout, child: V, layoutDirection: Int): Boolean {
     parent.onLayoutChild(child, layoutDirection)
@@ -82,16 +79,6 @@ class ScrollInBehavior<V : View>(context: Context, attrs: AttributeSet?) : Behav
       child.y = 0f
       currentChildY = 0
     }
-
-    val alphaRate = (anchorTopMargin * 2 - dependency.y) / (anchorTopMargin)
-    val alpha = ((alphaRate - 1f) * 255).toInt()
-//    drawable.alpha = if (alpha > 255) {
-//      255
-//    } else if (alpha < 0) {
-//      0
-//    } else {
-//      alpha
-//    }
 
     val drawable = child.background.mutate()
     val bounds = drawable.bounds
