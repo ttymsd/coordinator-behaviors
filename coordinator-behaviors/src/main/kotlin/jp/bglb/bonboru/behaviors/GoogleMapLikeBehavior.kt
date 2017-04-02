@@ -12,7 +12,6 @@ import android.support.v4.view.ViewCompat
 import android.support.v4.widget.ViewDragHelper
 import android.support.v4.widget.ViewDragHelper.Callback
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
@@ -21,9 +20,21 @@ import java.lang.ref.WeakReference
 import kotlin.annotation.AnnotationRetention.SOURCE
 
 /**
- * Created by Tetsuya Masuda on 2016/09/14.
+ * Copyright (C) 2017 Tetsuya Masuda
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-class GoogleMapLikeBehavior<V : View>(context: Context?, attrs: AttributeSet?) : Behavior<V>(
+class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : Behavior<V>(
     context, attrs) {
 
   companion object {
@@ -79,22 +90,21 @@ class GoogleMapLikeBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
 
   init {
     attrs?.let {
-      val typedArray = context?.obtainStyledAttributes(it, R.styleable.GoogleMapLikeBehaviorParam)
-      peekHeight = typedArray?.getDimensionPixelSize(
-          R.styleable.GoogleMapLikeBehaviorParam_peekHeight, 0)!!
-      anchorTopMargin = typedArray?.getDimensionPixelSize(
-          R.styleable.GoogleMapLikeBehaviorParam_anchorPoint, 0)!!
-      draggable = typedArray?.getBoolean(
-          R.styleable.GoogleMapLikeBehaviorParam_draggable, false)!!
-      skippedAnchorPoint = typedArray?.getBoolean(
-          R.styleable.GoogleMapLikeBehaviorParam_skipAnchorPoint, false)!!
+      val typedArray = context.obtainStyledAttributes(it, R.styleable.GoogleMapLikeBehaviorParam)
+      peekHeight = typedArray.getDimensionPixelSize(
+          R.styleable.GoogleMapLikeBehaviorParam_peekHeight, 0)
+      anchorTopMargin = typedArray.getDimensionPixelSize(
+          R.styleable.GoogleMapLikeBehaviorParam_anchorPoint, 0)
+      draggable = typedArray.getBoolean(
+          R.styleable.GoogleMapLikeBehaviorParam_draggable, false)
+      skippedAnchorPoint = typedArray.getBoolean(
+          R.styleable.GoogleMapLikeBehaviorParam_skipAnchorPoint, false)
 //      hideable = typedArray?.getBoolean(
 //          R.styleable.GoogleMapLikeBehaviorParam_hideable, false)!!
-      typedArray?.recycle()
+      typedArray.recycle()
     }
   }
 
-  // 委譲されるLayout処理
   override fun onLayoutChild(parent: CoordinatorLayout, child: V, layoutDirection: Int): Boolean {
     if (state != STATE_DRAGGING && state != STATE_SETTLING) {
       if (ViewCompat.getFitsSystemWindows(parent) && !ViewCompat.getFitsSystemWindows(child)) {
@@ -205,7 +215,6 @@ class GoogleMapLikeBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
         && Math.abs(initialY - ev.y) > touchSlop
   }
 
-  // interceptでtrueを返した場合に,CoordinatorLayoutBのscrollを考える
   override fun onTouchEvent(parent: CoordinatorLayout, child: V, ev: MotionEvent): Boolean {
     if (!draggable) {
       return false
@@ -379,9 +388,6 @@ class GoogleMapLikeBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
     }
   }
 
-  /**
-   * view内を再帰的に調べ、NestedScrollingChildが実装されてるViewを探す
-   */
   private fun findScrollingChild(view: View): View? = when (view) {
     is NestedScrollingChild -> view
 
@@ -420,7 +426,6 @@ class GoogleMapLikeBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
     }
   }
 
-  // update state
   private fun setStateInternal(@State state: Long) {
     if (this.state == state) {
       return
@@ -444,6 +449,7 @@ class GoogleMapLikeBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
   }
 
   private fun shouldHide(view: View, yvel: Float): Boolean {
+    // TODO
     return false
   }
 
@@ -461,7 +467,7 @@ class GoogleMapLikeBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
     }
   }
 
-  inner class DragCallback() : Callback() {
+  inner class DragCallback : Callback() {
 
     // 対象のviewをdrag可能にするかどうか
     override fun tryCaptureView(child: View?, pointerId: Int): Boolean {
@@ -559,26 +565,20 @@ class GoogleMapLikeBehavior<V : View>(context: Context?, attrs: AttributeSet?) :
       return constrain(top, minOffset, offset)
     }
 
-    override fun clampViewPositionHorizontal(child: View, left: Int, dx: Int): Int {
-      return child.left
+    override fun clampViewPositionHorizontal(child: View, left: Int, dx: Int): Int = child.left
+
+    private fun constrain(amount: Int, low: Int, high: Int): Int = if (amount < low) {
+      low
+    } else if (amount > high) {
+      high
+    } else {
+      amount
     }
 
-    private fun constrain(amount: Int, low: Int, high: Int): Int {
-      return if (amount < low) {
-        low
-      } else if (amount > high) {
-        high
-      } else {
-        amount
-      }
-    }
-
-    override fun getViewVerticalDragRange(child: View?): Int {
-      return if (hideable) {
-        parentHeight - minOffset;
-      } else {
-        maxOffset - minOffset;
-      }
+    override fun getViewVerticalDragRange(child: View?): Int = if (hideable) {
+      parentHeight - minOffset;
+    } else {
+      maxOffset - minOffset;
     }
   }
 }

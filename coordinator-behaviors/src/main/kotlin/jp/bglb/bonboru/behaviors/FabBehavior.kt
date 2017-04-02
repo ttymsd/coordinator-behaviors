@@ -8,7 +8,19 @@ import android.util.AttributeSet
 import android.view.View
 
 /**
- * Created by tetsuya on 2017/01/15.
+ * Copyright (C) 2017 Tetsuya Masuda
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 class FabBehavior(context: Context?, attrs: AttributeSet?) : FloatingActionButton.Behavior(context,
     attrs) {
@@ -33,16 +45,14 @@ class FabBehavior(context: Context?, attrs: AttributeSet?) : FloatingActionButto
   }
 
   override fun layoutDependsOn(parent: CoordinatorLayout?, child: FloatingActionButton?,
-      dependency: View?): Boolean {
-    val behavior = BottomNavigationBehavior.from(dependency)
-    return super.layoutDependsOn(parent, child, dependency) || behavior != null
-  }
+      dependency: View?): Boolean =
+      super.layoutDependsOn(parent, child, dependency) || hasBottomNavigationBehavior(dependency)
 
   override fun onDependentViewChanged(parent: CoordinatorLayout, child: FloatingActionButton,
       dependency: View): Boolean {
     if (dependency is AppBarLayout) {
       super.onDependentViewChanged(parent, child, dependency)
-    } else if (hasBottomNavigation(dependency)) {
+    } else if (hasBottomNavigationBehavior(dependency)) {
       updateFabPosition(dependency, child)
     } else {
       super.onDependentViewChanged(parent, child, dependency)
@@ -50,10 +60,8 @@ class FabBehavior(context: Context?, attrs: AttributeSet?) : FloatingActionButto
     return false
   }
 
-  private fun hasBottomNavigation(dependency: View): Boolean {
-    val behavior = BottomNavigationBehavior.from(dependency)
-    return behavior != null
-  }
+  private fun hasBottomNavigationBehavior(dependency: View?): Boolean =
+      BottomNavigationBehavior.from(dependency) != null
 
   private fun updateFabPosition(dependency: View, child: FloatingActionButton) {
     val top = dependency.y

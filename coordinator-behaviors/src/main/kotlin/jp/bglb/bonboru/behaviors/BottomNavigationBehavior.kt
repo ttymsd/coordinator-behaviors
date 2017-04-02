@@ -11,7 +11,19 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 
 /**
- * Created by tetsuya on 2017/01/12.
+ * Copyright (C) 2017 Tetsuya Masuda
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 class BottomNavigationBehavior<V : View>(context: Context?,
     attrs: AttributeSet?) : CoordinatorLayout.Behavior<V>(context, attrs) {
@@ -19,6 +31,7 @@ class BottomNavigationBehavior<V : View>(context: Context?,
   companion object {
     val SCROLL_UP = 1
     val SCROLL_DOWN = -1
+    private val ANIMATION_DURATION = 300L
 
     @SuppressWarnings("unchecked")
     fun <V : View> from(view: V?): BottomNavigationBehavior<V>? {
@@ -29,24 +42,48 @@ class BottomNavigationBehavior<V : View>(context: Context?,
     }
   }
 
-  private var parentHeight: Int = 0
   private var animating = false
-  var animatingDirection = 0
-    private set(value) {
-      field = value
+  private var animatingDirection = 0
+
+  private val animationListener = object : AnimatorListenerAdapter() {
+    override fun onAnimationStart(animation: Animator?) {
+      animating = true
     }
 
+    override fun onAnimationCancel(animation: Animator?) {
+      animating = true
+    }
+
+    override fun onAnimationEnd(animation: Animator?) {
+      animating = false
+    }
+  }
+
+  private lateinit var scrollOutAnimator: ObjectAnimator
+  private lateinit var scrollInAnimator: ObjectAnimator
+
   override fun onLayoutChild(parent: CoordinatorLayout, child: V, layoutDirection: Int): Boolean {
-    parentHeight = parent.height
+    val parentHeight = parent.height
     parent.onLayoutChild(child, layoutDirection)
     ViewCompat.offsetTopAndBottom(child, parentHeight - child.height)
+    scrollOutAnimator = ObjectAnimator.ofFloat(child, "translationY", 0f,
+        child.height.toFloat()).apply {
+      duration = ANIMATION_DURATION
+      interpolator = AccelerateDecelerateInterpolator()
+      addListener(animationListener)
+    }
+    scrollInAnimator = ObjectAnimator.ofFloat(child, "translationY",
+        child.height.toFloat(), 0f).apply {
+      duration = ANIMATION_DURATION
+      interpolator = AccelerateDecelerateInterpolator()
+      addListener(animationListener)
+    }
     return true
   }
 
   override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout?, child: V,
-      directTargetChild: View?, target: View?, nestedScrollAxes: Int): Boolean {
-    return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL
-  }
+      directTargetChild: View?, target: View?, nestedScrollAxes: Int): Boolean
+      = nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL
 
   override fun onNestedScroll(coordinatorLayout: CoordinatorLayout?, child: V, target: View?,
       dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int) {
@@ -57,51 +94,17 @@ class BottomNavigationBehavior<V : View>(context: Context?,
 
     animatingDirection = direction
     if (direction == SCROLL_DOWN) {
-      scrollOutAnimation(child)
+      scrollOutAnimation()
     } else {
-      scrollInAnimation(child)
+      scrollInAnimation()
     }
   }
 
-  private fun scrollOutAnimation(targetView: View) {
-    val objectAnimator = ObjectAnimator.ofFloat(targetView, "translationY", 0f,
-        targetView.height.toFloat())
-    objectAnimator.duration = 300
-    objectAnimator.interpolator = AccelerateDecelerateInterpolator()
-    objectAnimator.addListener(object : AnimatorListenerAdapter() {
-      override fun onAnimationStart(animation: Animator?) {
-        animating = true
-      }
-
-      override fun onAnimationCancel(animation: Animator?) {
-        animating = true
-      }
-
-      override fun onAnimationEnd(animation: Animator?) {
-        animating = false
-      }
-    })
-    objectAnimator.start()
+  private fun scrollOutAnimation() {
+    scrollOutAnimator.start()
   }
 
-  private fun scrollInAnimation(targetView: View) {
-    val objectAnimator = ObjectAnimator.ofFloat(targetView, "translationY",
-        targetView.height.toFloat(), 0f)
-    objectAnimator.duration = 300
-    objectAnimator.interpolator = AccelerateDecelerateInterpolator()
-    objectAnimator.addListener(object : AnimatorListenerAdapter() {
-      override fun onAnimationStart(animation: Animator?) {
-        animating = true
-      }
-
-      override fun onAnimationCancel(animation: Animator?) {
-        animating = true
-      }
-
-      override fun onAnimationEnd(animation: Animator?) {
-        animating = false
-      }
-    })
-    objectAnimator.start()
+  private fun scrollInAnimation() {
+    scrollInAnimator.start()
   }
 }
