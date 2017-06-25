@@ -151,7 +151,7 @@ class YoutubeLikeBehavior<V : View>(context: Context,
       STATE_SHRINK -> {
         ViewCompat.setScaleX(child, shrinkRate)
         ViewCompat.setScaleY(child, shrinkRate)
-        ViewCompat.offsetLeftAndRight(child, leftMargin)
+        child.translationX = (leftMargin * 2f * (1f - shrinkRate))
         ViewCompat.offsetTopAndBottom(child, shrinkMarginTop)
       }
 
