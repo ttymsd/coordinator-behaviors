@@ -11,4 +11,5 @@
     app:shrinkRate="@integer/media_shrink_rate"
     app:ylb_marginBottom="@dimen/margin_bottom"
     app:ylb_marginRight="@dimen/margin_right"
+    app:start_state="state_shrink"
     />

@@ -103,6 +103,8 @@ class YoutubeLikeBehavior<V : View>(context: Context,
       marginRight = youtubeBehaviorParams.getDimensionPixelSize(
           R.styleable.YoutubeLikeBehaviorParam_ylb_marginRight,
           0)
+      state = youtubeBehaviorParams.getInt(R.styleable.YoutubeLikeBehaviorParam_start_state,
+              STATE_EXPANDED.toInt()).toLong()
       youtubeBehaviorParams.recycle()
     }
   }
@@ -151,7 +153,7 @@ class YoutubeLikeBehavior<V : View>(context: Context,
       STATE_SHRINK -> {
         ViewCompat.setScaleX(child, shrinkRate)
         ViewCompat.setScaleY(child, shrinkRate)
-        ViewCompat.offsetLeftAndRight(child, leftMargin)
+        child.translationX = (leftMargin * 2f * (1f - shrinkRate))
         ViewCompat.offsetTopAndBottom(child, shrinkMarginTop)
       }
 

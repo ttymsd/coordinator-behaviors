@@ -12,6 +12,11 @@
   </declare-styleable>
 
   <declare-styleable name="YoutubeLikeBehaviorParam">
+    <attr name="start_state">
+      <enum name="state_expanded" value="3"/>
+      <enum name="state_shrink" value="4"/>
+      <enum name="state_hidden" value="7"/>
+    </attr>
     <attr format="dimension" name="mediaHeight"/>
     <attr format="float" name="shrinkRate"/>
     <attr format="dimension" name="ylb_marginBottom"/>
