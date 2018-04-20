@@ -20,9 +20,8 @@ import android.view.View
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class ScrollingBehavior<V : View>(context: Context,
-    attrs: AttributeSet?) : CoordinatorLayout.Behavior<V>(
-    context, attrs) {
+class ScrollingBehavior<V : View>(context: Context, attrs: AttributeSet? = null
+) : CoordinatorLayout.Behavior<V>(context, attrs) {
 
   var peekHeight = 300
   var anchorPointY = 600

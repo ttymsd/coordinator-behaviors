@@ -23,8 +23,8 @@ import android.view.View
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class ScrollInBehavior<V : View>(context: Context, attrs: AttributeSet?) : Behavior<V>(context,
-    attrs) {
+class ScrollInBehavior<V : View>(context: Context, attrs: AttributeSet? = null
+) : Behavior<V>(context, attrs) {
   var peekHeight = 300
   var anchorPointY = 600
   var currentChildY = 0
@@ -57,7 +57,7 @@ class ScrollInBehavior<V : View>(context: Context, attrs: AttributeSet?) : Behav
     parent.onLayoutChild(child, layoutDirection)
     anchorPointY = parent.height - anchorTopMargin
     if (child is AppBarLayout) {
-      (0..child.childCount - 1).map {
+      (0 until child.childCount).map {
         child.getChildAt(it)
       }.find {
         it is Toolbar

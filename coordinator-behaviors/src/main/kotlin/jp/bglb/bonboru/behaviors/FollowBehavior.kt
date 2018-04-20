@@ -22,8 +22,8 @@ import android.view.View
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class FollowBehavior<V : View>(context: Context?, attrs: AttributeSet?) : Behavior<V>(
-    context, attrs) {
+class FollowBehavior<V : View>(context: Context?, attrs: AttributeSet? = null
+) : Behavior<V>(context, attrs) {
 
   var peekHeight = 300
   var anchorPointY = 600

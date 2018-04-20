@@ -21,9 +21,8 @@ import android.view.View
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class ScrollOutBehavior(context: Context,
-    attrs: AttributeSet?) : AppBarLayout.ScrollingViewBehavior(
-    context, attrs) {
+class ScrollOutBehavior(context: Context, attrs: AttributeSet? = null
+) : AppBarLayout.ScrollingViewBehavior(context, attrs) {
 
   var peekHeight = 300
   var anchorPointY = 600

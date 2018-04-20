@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import butterknife.bindView
 import jp.bglb.bonboru.behaviors.YoutubeLikeBehavior
+import kotterknife.bindView
 
 /**
 * Copyright (C) 2017 Tetsuya Masuda
@@ -24,7 +24,7 @@ import jp.bglb.bonboru.behaviors.YoutubeLikeBehavior
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-class YoutubeBehaviorActivity() : AppCompatActivity(), YoutubeLikeBehavior.OnBehaviorStateListener {
+class YoutubeBehaviorActivity : AppCompatActivity(), YoutubeLikeBehavior.OnBehaviorStateListener {
   val root by bindView<CoordinatorLayout>(R.id.root)
   val show by bindView<Button>(R.id.show)
   val reset by bindView<Button>(R.id.reset)
@@ -59,7 +59,7 @@ class YoutubeBehaviorActivity() : AppCompatActivity(), YoutubeLikeBehavior.OnBeh
     }
   }
 
-  override fun onBehaviorStateChanged(newState: Long) {
+  override fun onBehaviorStateChanged(newState: Int) {
     if (newState == YoutubeLikeBehavior.STATE_TO_RIGHT || newState == YoutubeLikeBehavior.STATE_TO_LEFT) {
       root.removeView(media)
       root.removeView(description)

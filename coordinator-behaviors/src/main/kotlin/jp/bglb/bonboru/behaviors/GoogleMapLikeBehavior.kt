@@ -34,8 +34,8 @@ import kotlin.annotation.AnnotationRetention.SOURCE
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : Behavior<V>(
-    context, attrs) {
+class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet? = null
+) : Behavior<V>(context, attrs) {
 
   companion object {
     @IntDef(STATE_DRAGGING,
@@ -47,12 +47,12 @@ class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : 
     @Retention(SOURCE)
     annotation class State
 
-    const val STATE_DRAGGING = 1L
-    const val STATE_SETTLING = 2L
-    const val STATE_ANCHOR_POINT = 3L
-    const val STATE_EXPANDED = 4L
-    const val STATE_COLLAPSED = 5L
-    const val STATE_HIDDEN = 6L
+    const val STATE_DRAGGING = 1
+    const val STATE_SETTLING = 2
+    const val STATE_ANCHOR_POINT = 3
+    const val STATE_EXPANDED = 4
+    const val STATE_COLLAPSED = 5
+    const val STATE_HIDDEN = 6
 
     @SuppressWarnings("unchecked")
     fun <V : View> from(view: V?): GoogleMapLikeBehavior<V>? {
@@ -248,14 +248,14 @@ class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : 
     return !ignoreEvents
   }
 
-  override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout?, child: V,
-      directTargetChild: View?, target: View?, nestedScrollAxes: Int): Boolean {
+  override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout, child: V,
+      directTargetChild: View, target: View, nestedScrollAxes: Int): Boolean {
     lastNestedScrollDy = 0
     nestedScrolled = false
     return ((nestedScrollAxes and ViewCompat.SCROLL_AXIS_VERTICAL) != 0)
   }
 
-  override fun onNestedPreScroll(coordinatorLayout: CoordinatorLayout?, child: V, target: View?,
+  override fun onNestedPreScroll(coordinatorLayout: CoordinatorLayout, child: V, target: View,
       dx: Int, dy: Int, consumed: IntArray) {
     val scrollChild = nestedScrollingChildRef.get() ?: return
     if (target != scrollChild) {
@@ -291,7 +291,7 @@ class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : 
     nestedScrolled = true
   }
 
-  override fun onStopNestedScroll(coordinatorLayout: CoordinatorLayout?, child: V, target: View?) {
+  override fun onStopNestedScroll(coordinatorLayout: CoordinatorLayout, child: V, target: View) {
     if (child.top == minOffset) {
       setStateInternal(STATE_EXPANDED)
       return
@@ -300,7 +300,7 @@ class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : 
       return
     }
     val top: Int
-    val targetState: Long
+    @State val targetState: Int
     if (lastNestedScrollDy > 0) {
       val currentTop = child.top
       if (currentTop > parentHeight - anchorPosition) {
@@ -356,7 +356,7 @@ class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : 
     nestedScrolled = false
   }
 
-  override fun onNestedPreFling(coordinatorLayout: CoordinatorLayout?, child: V, target: View?,
+  override fun onNestedPreFling(coordinatorLayout: CoordinatorLayout, child: V, target: View,
       velocityX: Float, velocityY: Float): Boolean {
     return target == nestedScrollingChildRef.get()
         && (state != STATE_EXPANDED) ||
@@ -368,12 +368,12 @@ class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : 
     return VelocityTrackerCompat.getYVelocity(velocityTracker, activePointerId);
   }
 
-  fun updateState(value: Long) {
-    if (this.state == value) {
+  fun updateState(@State state : Int) {
+    if (this.state == state) {
       return
     }
 
-    this.state = value
+    this.state = state
 
     val sheet = viewRef.get()
     val parent = sheet?.parent
@@ -394,7 +394,7 @@ class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : 
     is ViewGroup -> {
       var result: View? = null
       val group = view
-      (0..group.childCount - 1)
+      (0 until group.childCount)
           .map { findScrollingChild(group.getChildAt(it)) }
           .forEach { v ->
             v?.let {
@@ -407,7 +407,7 @@ class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : 
     else -> null
   }
 
-  private fun startSettlingAnimation(child: View, @State state: Long) {
+  private fun startSettlingAnimation(child: View, @State state: Int) {
     val top: Int
     if (state == STATE_COLLAPSED) {
       top = maxOffset
@@ -426,7 +426,7 @@ class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : 
     }
   }
 
-  private fun setStateInternal(@State state: Long) {
+  private fun setStateInternal(@State state: Int) {
     if (this.state == state) {
       return
     }
@@ -454,10 +454,10 @@ class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : 
   }
 
   interface OnBehaviorStateListener {
-    fun onBehaviorStateChanged(newState: Long)
+    fun onBehaviorStateChanged(@State newState: Int)
   }
 
-  inner class SettleRunnable(val view: View, @State val state: Long) : Runnable {
+  inner class SettleRunnable(val view: View, @State val state: Int) : Runnable {
     override fun run() {
       if (dragHelper != null && dragHelper?.continueSettling(true)!!) {
         ViewCompat.postOnAnimation(view, this)
@@ -470,7 +470,7 @@ class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : 
   inner class DragCallback : Callback() {
 
     // 対象のviewをdrag可能にするかどうか
-    override fun tryCaptureView(child: View?, pointerId: Int): Boolean {
+    override fun tryCaptureView(child: View, pointerId: Int): Boolean {
       if (state == STATE_DRAGGING) {
         return false
       }
@@ -486,7 +486,7 @@ class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : 
       return viewRef.get() != null
     }
 
-    override fun onViewPositionChanged(changedView: View?, left: Int, top: Int, dx: Int, dy: Int) {
+    override fun onViewPositionChanged(changedView: View, left: Int, top: Int, dx: Int, dy: Int) {
       dispatchOnSlide(top)
     }
 
@@ -497,7 +497,7 @@ class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : 
     }
 
     override fun onViewReleased(releasedChild: View, xvel: Float, yvel: Float) {
-      @State var targetState = 0L
+      @State var targetState = 0
       var top = 0
       if (yvel < 0) {
         val currentTop = releasedChild.top
@@ -556,7 +556,7 @@ class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : 
       }
     }
 
-    override fun clampViewPositionVertical(child: View?, top: Int, dy: Int): Int {
+    override fun clampViewPositionVertical(child: View, top: Int, dy: Int): Int {
       val offset = if (hideable) {
         parentHeight
       } else {
@@ -575,7 +575,7 @@ class GoogleMapLikeBehavior<V : View>(context: Context, attrs: AttributeSet?) : 
       amount
     }
 
-    override fun getViewVerticalDragRange(child: View?): Int = if (hideable) {
+    override fun getViewVerticalDragRange(child: View): Int = if (hideable) {
       parentHeight - minOffset;
     } else {
       maxOffset - minOffset;
