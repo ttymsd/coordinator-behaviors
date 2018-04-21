@@ -3,7 +3,7 @@ package jp.bglb.bonboru.behaviors.app
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import butterknife.bindView
+import kotterknife.bindView
 
 /**
 * Copyright (C) 2017 Tetsuya Masuda

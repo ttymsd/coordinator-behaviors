@@ -1,20 +1,22 @@
 buildscript {
-  ext.kotlin_version = '1.1.0'
+  ext.kotlin_version = '1.2.31'
   repositories {
+    google()
     jcenter()
     mavenCentral()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.3.0'
+    classpath 'com.android.tools.build:gradle:3.1.1'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
   }
 }
 
 allprojects {
-  version '0.3.3'
+  version '0.4.0'
 
   repositories {
+    google()
     jcenter()
     mavenCentral()
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
@@ -22,7 +24,7 @@ allprojects {
 }
 
 project.ext {
-  support = '25.3.1'
+  support = '27.1.1'
 }
 
 task clean(type: Delete) {

@@ -22,8 +22,8 @@ import android.view.View
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class FabBehavior(context: Context?, attrs: AttributeSet?) : FloatingActionButton.Behavior(context,
-    attrs) {
+class FabBehavior(context: Context?, attrs: AttributeSet? = null
+) : FloatingActionButton.Behavior(context, attrs) {
 
   private val isScrollOut: Boolean
   private var parentHeight = 0

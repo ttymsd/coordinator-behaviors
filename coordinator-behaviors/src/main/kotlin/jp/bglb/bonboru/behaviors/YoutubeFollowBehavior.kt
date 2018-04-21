@@ -22,8 +22,8 @@ import android.view.View
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class YoutubeFollowBehavior<V : View>(context: Context, attrs: AttributeSet?) : Behavior<V>(
-    context, attrs) {
+class YoutubeFollowBehavior<V : View>(context: Context, attrs: AttributeSet? = null
+) : Behavior<V>(context, attrs) {
 
   private val shrinkRate: Float
   private val mediaHeight: Float

@@ -25,13 +25,13 @@ import android.view.animation.AccelerateDecelerateInterpolator
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class BottomNavigationBehavior<V : View>(context: Context?,
-    attrs: AttributeSet?) : CoordinatorLayout.Behavior<V>(context, attrs) {
+class BottomNavigationBehavior<V : View>(context: Context?, attrs: AttributeSet? = null
+) : CoordinatorLayout.Behavior<V>(context, attrs) {
 
   companion object {
-    val SCROLL_UP = 1
-    val SCROLL_DOWN = -1
-    private val ANIMATION_DURATION = 300L
+    const val SCROLL_UP = 1
+    const val SCROLL_DOWN = -1
+    private const val ANIMATION_DURATION = 300L
 
     @SuppressWarnings("unchecked")
     fun <V : View> from(view: V?): BottomNavigationBehavior<V>? {
@@ -81,15 +81,16 @@ class BottomNavigationBehavior<V : View>(context: Context?,
     return true
   }
 
-  override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout?, child: V,
-      directTargetChild: View?, target: View?, nestedScrollAxes: Int): Boolean
-      = nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL
+  override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout, child: V,
+      directTargetChild: View, target: View, nestedScrollAxes: Int, type: Int): Boolean {
+    return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL
+  }
 
-  override fun onNestedScroll(coordinatorLayout: CoordinatorLayout?, child: V, target: View?,
-      dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int) {
-    if (animating || dyConsumed == 0) return
+  override fun onNestedScroll(coordinatorLayout: CoordinatorLayout, child: V, target: View,
+      dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int, type: Int) {
+    if (animating) return
 
-    val direction = if (dyConsumed > 0) SCROLL_DOWN else SCROLL_UP
+    val direction = if (dyUnconsumed >= 0) SCROLL_DOWN else SCROLL_UP
     if (animatingDirection == direction) return
 
     animatingDirection = direction

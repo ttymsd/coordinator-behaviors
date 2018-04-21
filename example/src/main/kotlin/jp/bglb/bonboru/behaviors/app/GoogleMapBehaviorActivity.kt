@@ -8,9 +8,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.widget.Button
-import butterknife.bindView
 import jp.bglb.bonboru.behaviors.GoogleMapLikeBehavior
-
+import kotterknife.bindView
 
 /**
 * Copyright (C) 2017 Tetsuya Masuda

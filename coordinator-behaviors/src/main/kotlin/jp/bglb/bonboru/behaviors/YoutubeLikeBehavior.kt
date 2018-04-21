@@ -31,7 +31,7 @@ import kotlin.annotation.AnnotationRetention.SOURCE
  * limitations under the License.
  */
 class YoutubeLikeBehavior<V : View>(context: Context,
-    attrs: AttributeSet?) : CoordinatorLayout.Behavior<V>(context, attrs) {
+    attrs: AttributeSet? = null) : CoordinatorLayout.Behavior<V>(context, attrs) {
 
   companion object {
     @IntDef(STATE_DRAGGING,
@@ -45,14 +45,14 @@ class YoutubeLikeBehavior<V : View>(context: Context,
     @Retention(SOURCE)
     annotation class State
 
-    const val STATE_DRAGGING = 1L
-    const val STATE_SETTLING = 2L
-    const val STATE_EXPANDED = 3L
-    const val STATE_SHRINK = 4L
-    const val STATE_TO_LEFT = 5L
-    const val STATE_TO_RIGHT = 6L
-    const val STATE_HIDDEN = 7L
-    const val STATE_SHRINK_DRAGGING = 8L
+    const val STATE_DRAGGING = 1
+    const val STATE_SETTLING = 2
+    const val STATE_EXPANDED = 3
+    const val STATE_SHRINK = 4
+    const val STATE_TO_LEFT = 5
+    const val STATE_TO_RIGHT = 6
+    const val STATE_HIDDEN = 7
+    const val STATE_SHRINK_DRAGGING = 8
 
     const val REMOVE_THRETHOLD = 30 * 3
 
@@ -104,12 +104,12 @@ class YoutubeLikeBehavior<V : View>(context: Context,
           R.styleable.YoutubeLikeBehaviorParam_ylb_marginRight,
           0)
       state = youtubeBehaviorParams.getInt(R.styleable.YoutubeLikeBehaviorParam_start_state,
-              STATE_EXPANDED.toInt()).toLong()
+          STATE_EXPANDED)
       youtubeBehaviorParams.recycle()
     }
   }
 
-  fun updateState(@State value: Long) {
+  fun updateState(@State value: Int) {
     if (this.state == value) {
       return
     }
@@ -268,7 +268,7 @@ class YoutubeLikeBehavior<V : View>(context: Context,
     return !ignoreEvents
   }
 
-  private fun setStateInternal(@State state: Long) {
+  private fun setStateInternal(@State state: Int) {
     if (this.state == state) {
       return
     }
@@ -286,7 +286,7 @@ class YoutubeLikeBehavior<V : View>(context: Context,
     }
   }
 
-  private fun startSettlingAnimation(child: View, @State state: Long) {
+  private fun startSettlingAnimation(child: View, @State state: Int) {
     val top: Int
     val left: Int
     if (state == STATE_EXPANDED) {
@@ -304,7 +304,7 @@ class YoutubeLikeBehavior<V : View>(context: Context,
     }
   }
 
-  inner class SettleRunnable(val view: View, @State val state: Long) : Runnable {
+  inner class SettleRunnable(val view: View, @State val state: Int) : Runnable {
     override fun run() {
       if (dragHelper != null && dragHelper?.continueSettling(true)!!) {
         ViewCompat.postOnAnimation(view, this)
@@ -315,8 +315,7 @@ class YoutubeLikeBehavior<V : View>(context: Context,
   }
 
   inner class DragCallback : Callback() {
-
-    override fun tryCaptureView(child: View?, pointerId: Int): Boolean {
+    override fun tryCaptureView(child: View, pointerId: Int): Boolean {
       if (YoutubeLikeBehavior.from(child) == null) {
         return false
       }
@@ -381,7 +380,7 @@ class YoutubeLikeBehavior<V : View>(context: Context,
       }
     }
 
-    override fun clampViewPositionVertical(child: View?, top: Int, dy: Int): Int {
+    override fun clampViewPositionVertical(child: View, top: Int, dy: Int): Int {
       return if (state == STATE_SHRINK_DRAGGING || state == STATE_SHRINK) {
         if (Math.abs(shrinkMarginTop - top) >= 10) {
           setStateInternal(STATE_DRAGGING)
@@ -416,6 +415,6 @@ class YoutubeLikeBehavior<V : View>(context: Context,
   }
 
   interface OnBehaviorStateListener {
-    fun onBehaviorStateChanged(newState: Long)
+    fun onBehaviorStateChanged(@State newState: Int)
   }
 }

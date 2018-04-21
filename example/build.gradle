@@ -3,8 +3,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-  compileSdkVersion 25
-  buildToolsVersion "25.0.2"
+  compileSdkVersion 27
+  buildToolsVersion "27.0.3"
   defaultConfig {
     applicationId "jp.bglb.bonboru.behaviors.app"
     minSdkVersion 17
@@ -27,18 +27,16 @@ android {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
+  implementation project(':coordinator-behaviors')
 
-  compile project(':coordinator-behaviors')
+  implementation 'com.jakewharton:kotterknife:0.1.0-SNAPSHOT'
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-  compile 'com.jakewharton:kotterknife:0.1.0-SNAPSHOT'
-  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-
-  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+  androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
-  compile "com.android.support:appcompat-v7:$support"
-  compile "com.android.support:design:$support"
-  testCompile 'junit:junit:4.12'
+  implementation "com.android.support:appcompat-v7:$support"
+  implementation "com.android.support:design:$support"
+  testImplementation 'junit:junit:4.12'
 }
