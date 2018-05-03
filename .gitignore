@@ -61,6 +61,7 @@ $RECYCLE.BIN/
 *.iml
 
 ## Directory-based project format:
+.idea/
 .idea/inspectionProfiles/
 .idea/compiler.xml
 .idea/copyright/profiles_settings.xml
