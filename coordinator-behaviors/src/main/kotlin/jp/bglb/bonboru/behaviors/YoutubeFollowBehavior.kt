@@ -65,6 +65,9 @@ class YoutubeFollowBehavior<V : View>(context: Context, attrs: AttributeSet? = n
         (parentHeight - mediaHeight + mediaHeight * shrinkRate / 2).toInt()) - marginBottom
     parent.onLayoutChild(child, layoutDirection)
     ViewCompat.offsetTopAndBottom(child, mediaHeight.toInt())
+    val lp = child.layoutParams
+    lp.height = (parentHeight - mediaHeight).toInt()
+    child.layoutParams = lp
     return true
   }
 
