@@ -189,7 +189,7 @@ class YoutubeLikeBehavior<V : View>(context: Context,
     if (!child.isShown) {
       return false
     }
-    val action = MotionEventCompat.getActionMasked(ev)
+    val action = ev.action
     if (action == MotionEvent.ACTION_DOWN) {
       reset()
     }
@@ -197,7 +197,6 @@ class YoutubeLikeBehavior<V : View>(context: Context,
       velocityTracker = VelocityTracker.obtain()
     }
 
-    velocityTracker?.addMovement(ev)
     when (action) {
       MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
         activePointerId = MotionEvent.INVALID_POINTER_ID
@@ -218,6 +217,7 @@ class YoutubeLikeBehavior<V : View>(context: Context,
         // do nothing
       }
     }
+    velocityTracker?.addMovement(ev)
 
     if (!ignoreEvents && dragHelper?.shouldInterceptTouchEvent(ev)!!) {
       return true
@@ -230,7 +230,7 @@ class YoutubeLikeBehavior<V : View>(context: Context,
 
     return action == MotionEvent.ACTION_MOVE
         && !ignoreEvents
-        && state != STATE_DRAGGING
+        && (state != STATE_DRAGGING || state != STATE_SHRINK_DRAGGING)
         && (Math.abs(initialX - ev.x) > touchSlop || Math.abs(initialY - ev.y) > touchSlop)
   }
 

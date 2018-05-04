@@ -32,6 +32,7 @@ class YoutubeFollowBehavior<V : View>(context: Context, attrs: AttributeSet? = n
 
   private var shrinkContentMarginTop = 0
   private var parentHeight = 0
+  private var sizeAdjusted = false
 
   init {
     if (attrs == null) {
@@ -41,38 +42,41 @@ class YoutubeFollowBehavior<V : View>(context: Context, attrs: AttributeSet? = n
       marginRight = 0
     } else {
       val youtubeBehaviorParams = context.obtainStyledAttributes(attrs,
-          R.styleable.YoutubeLikeBehaviorParam)
+        R.styleable.YoutubeLikeBehaviorParam)
       shrinkRate = youtubeBehaviorParams.getFloat(R.styleable.YoutubeLikeBehaviorParam_shrinkRate,
-          0.5f)
+        0.5f)
       mediaHeight = youtubeBehaviorParams.getDimension(
-          R.styleable.YoutubeLikeBehaviorParam_mediaHeight, 600f)
+        R.styleable.YoutubeLikeBehaviorParam_mediaHeight, 600f)
       marginBottom = youtubeBehaviorParams.getDimensionPixelSize(
-          R.styleable.YoutubeLikeBehaviorParam_ylb_marginBottom,
-          0)
+        R.styleable.YoutubeLikeBehaviorParam_ylb_marginBottom,
+        0)
       marginRight = youtubeBehaviorParams.getDimensionPixelSize(
-          R.styleable.YoutubeLikeBehaviorParam_ylb_marginRight,
-          0)
+        R.styleable.YoutubeLikeBehaviorParam_ylb_marginRight,
+        0)
       youtubeBehaviorParams.recycle()
     }
   }
 
-  override fun layoutDependsOn(parent: CoordinatorLayout?, child: V, dependency: View?): Boolean
-      = YoutubeLikeBehavior.from(dependency) != null
+  override fun layoutDependsOn(parent: CoordinatorLayout?, child: V,
+    dependency: View?): Boolean = YoutubeLikeBehavior.from(dependency) != null
 
   override fun onLayoutChild(parent: CoordinatorLayout, child: V, layoutDirection: Int): Boolean {
     parentHeight = parent.height
     shrinkContentMarginTop = Math.min(parentHeight,
-        (parentHeight - mediaHeight + mediaHeight * shrinkRate / 2).toInt()) - marginBottom
+      (parentHeight - mediaHeight + mediaHeight * shrinkRate / 2).toInt()) - marginBottom
     parent.onLayoutChild(child, layoutDirection)
     ViewCompat.offsetTopAndBottom(child, mediaHeight.toInt())
-    val lp = child.layoutParams
-    lp.height = (parentHeight - mediaHeight).toInt()
-    child.layoutParams = lp
+    if (!sizeAdjusted) {
+      sizeAdjusted = true
+      val lp = child.layoutParams
+      lp.height = (parentHeight - mediaHeight).toInt()
+      child.layoutParams = lp
+    }
     return true
   }
 
   override fun onDependentViewChanged(parent: CoordinatorLayout, child: V,
-      dependency: View): Boolean {
+    dependency: View): Boolean {
     super.onDependentViewChanged(parent, child, dependency)
     val rate = dependency.y / shrinkContentMarginTop
     child.alpha = 1f - rate
