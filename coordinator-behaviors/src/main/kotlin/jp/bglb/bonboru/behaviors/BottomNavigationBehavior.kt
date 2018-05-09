@@ -31,7 +31,7 @@ class BottomNavigationBehavior<V : View>(context: Context?, attrs: AttributeSet?
   companion object {
     const val SCROLL_UP = 1
     const val SCROLL_DOWN = -1
-    private const val ANIMATION_DURATION = 300L
+    const val ANIMATION_DURATION = 300L
 
     @SuppressWarnings("unchecked")
     fun <V : View> from(view: V?): BottomNavigationBehavior<V>? {

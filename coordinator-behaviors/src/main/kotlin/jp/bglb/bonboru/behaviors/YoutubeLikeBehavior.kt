@@ -1,7 +1,11 @@
 package jp.bglb.bonboru.behaviors
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.support.annotation.IntDef
+import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.CoordinatorLayout.LayoutParams
 import android.support.v4.view.MotionEventCompat
@@ -12,6 +16,10 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import jp.bglb.bonboru.behaviors.BottomNavigationBehavior.Companion.ANIMATION_DURATION
+import jp.bglb.bonboru.behaviors.BottomNavigationBehavior.Companion.SCROLL_DOWN
+import jp.bglb.bonboru.behaviors.BottomNavigationBehavior.Companion.SCROLL_UP
 import java.lang.ref.WeakReference
 import kotlin.annotation.AnnotationRetention.SOURCE
 
@@ -137,7 +145,28 @@ class YoutubeLikeBehavior<V : View>(context: Context,
       parent.onLayoutChild(child, layoutDirection)
     }
 
-    parentHeight = parent.height
+    var bottomNavigationHeight = 0
+    (0 until parent.childCount).forEach {
+      val view = parent.getChildAt(it)
+      if (view is BottomNavigationView) {
+        bottomNavigationHeight = view.height
+      }
+    }
+
+    scrollOutAnimator = ObjectAnimator.ofFloat(child, "translationY", 0f,
+        bottomNavigationHeight.toFloat()).apply {
+      duration = ANIMATION_DURATION
+      interpolator = AccelerateDecelerateInterpolator()
+      addListener(animationListener)
+    }
+    scrollInAnimator = ObjectAnimator.ofFloat(child, "translationY",
+        bottomNavigationHeight.toFloat(), 0f).apply {
+      duration = ANIMATION_DURATION
+      interpolator = AccelerateDecelerateInterpolator()
+      addListener(animationListener)
+    }
+
+    parentHeight = parent.height - bottomNavigationHeight
     parentWidth = parent.width
     val halfChildHeight = child.height / 2f
     shrinkMarginTop = Math.min(parentHeight,
@@ -268,11 +297,65 @@ class YoutubeLikeBehavior<V : View>(context: Context,
     return !ignoreEvents
   }
 
+  private var animating = false
+  private var animatingDirection = 0
+
+  private val animationListener = object : AnimatorListenerAdapter() {
+    override fun onAnimationStart(animation: Animator?) {
+      animating = true
+    }
+
+    override fun onAnimationCancel(animation: Animator?) {
+      animating = true
+    }
+
+    override fun onAnimationEnd(animation: Animator?) {
+      animating = false
+    }
+  }
+
+  private lateinit var scrollOutAnimator: ObjectAnimator
+  private lateinit var scrollInAnimator: ObjectAnimator
+
+  override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout, child: V,
+      directTargetChild: View, target: View, nestedScrollAxes: Int, type: Int): Boolean {
+    return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL
+  }
+
+  override fun onNestedScroll(coordinatorLayout: CoordinatorLayout, child: V, target: View,
+      dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int, type: Int) {
+    if (animating) return
+
+    val direction = if (dyUnconsumed >= 0) SCROLL_DOWN else SCROLL_UP
+    if (animatingDirection == direction) return
+
+    animatingDirection = direction
+    if (direction == SCROLL_DOWN) {
+      scrollOutAnimation()
+    } else {
+      scrollInAnimation()
+    }
+  }
+
+  private fun scrollOutAnimation() {
+    // TODO: BottomNavigationのいちに依存させる
+    scrollOutAnimator.start()
+  }
+
+  private fun scrollInAnimation() {
+    scrollInAnimator.start()
+  }
+
   private fun setStateInternal(@State state: Int) {
     if (this.state == state) {
       return
     }
     this.state = state
+    if (state == STATE_EXPANDED) {
+      scrollInAnimation()
+    } else if (state == STATE_SHRINK) {
+      scrollOutAnimation()
+    }
     if (!(this.state == STATE_DRAGGING || this.state == STATE_SETTLING)) {
       this.listener?.onBehaviorStateChanged(state)
     }
