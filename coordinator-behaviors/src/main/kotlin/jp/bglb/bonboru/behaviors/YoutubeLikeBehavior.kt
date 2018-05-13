@@ -1,7 +1,11 @@
 package jp.bglb.bonboru.behaviors
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.support.annotation.IntDef
+import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.CoordinatorLayout.LayoutParams
 import android.support.v4.view.MotionEventCompat
@@ -12,6 +16,10 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import jp.bglb.bonboru.behaviors.BottomNavigationBehavior.Companion.ANIMATION_DURATION
+import jp.bglb.bonboru.behaviors.BottomNavigationBehavior.Companion.SCROLL_DOWN
+import jp.bglb.bonboru.behaviors.BottomNavigationBehavior.Companion.SCROLL_UP
 import java.lang.ref.WeakReference
 import kotlin.annotation.AnnotationRetention.SOURCE
 
@@ -31,17 +39,17 @@ import kotlin.annotation.AnnotationRetention.SOURCE
  * limitations under the License.
  */
 class YoutubeLikeBehavior<V : View>(context: Context,
-    attrs: AttributeSet? = null) : CoordinatorLayout.Behavior<V>(context, attrs) {
+  attrs: AttributeSet? = null) : CoordinatorLayout.Behavior<V>(context, attrs) {
 
   companion object {
     @IntDef(STATE_DRAGGING,
-        STATE_SETTLING,
-        STATE_EXPANDED,
-        STATE_SHRINK,
-        STATE_TO_LEFT,
-        STATE_TO_RIGHT,
-        STATE_HIDDEN,
-        STATE_SHRINK_DRAGGING)
+      STATE_SETTLING,
+      STATE_EXPANDED,
+      STATE_SHRINK,
+      STATE_TO_LEFT,
+      STATE_TO_RIGHT,
+      STATE_HIDDEN,
+      STATE_SHRINK_DRAGGING)
     @Retention(SOURCE)
     annotation class State
 
@@ -60,7 +68,7 @@ class YoutubeLikeBehavior<V : View>(context: Context,
     fun <V : View> from(view: V?): YoutubeLikeBehavior<V>? {
       if (view == null) return null
       val params = view.layoutParams as? LayoutParams ?: throw IllegalArgumentException(
-          "The view is not a child of CoordinatorLayout")
+        "The view is not a child of CoordinatorLayout")
       return params.behavior as? YoutubeLikeBehavior<V>
     }
   }
@@ -86,6 +94,7 @@ class YoutubeLikeBehavior<V : View>(context: Context,
   private var parentWidth = 0
   private var leftMargin = 0
   private var shrinkMarginTop = 0
+  private var bottomNavigationHeight = 0
 
   init {
     if (attrs == null) {
@@ -94,17 +103,17 @@ class YoutubeLikeBehavior<V : View>(context: Context,
       marginRight = 0
     } else {
       val youtubeBehaviorParams = context.obtainStyledAttributes(attrs,
-          R.styleable.YoutubeLikeBehaviorParam)
+        R.styleable.YoutubeLikeBehaviorParam)
       shrinkRate = youtubeBehaviorParams.getFloat(R.styleable.YoutubeLikeBehaviorParam_shrinkRate,
-          0.5f)
+        0.5f)
       marginBottom = youtubeBehaviorParams.getDimensionPixelSize(
-          R.styleable.YoutubeLikeBehaviorParam_ylb_marginBottom,
-          0)
+        R.styleable.YoutubeLikeBehaviorParam_ylb_marginBottom,
+        0)
       marginRight = youtubeBehaviorParams.getDimensionPixelSize(
-          R.styleable.YoutubeLikeBehaviorParam_ylb_marginRight,
-          0)
+        R.styleable.YoutubeLikeBehaviorParam_ylb_marginRight,
+        0)
       state = youtubeBehaviorParams.getInt(R.styleable.YoutubeLikeBehaviorParam_start_state,
-          STATE_EXPANDED)
+        STATE_EXPANDED)
       youtubeBehaviorParams.recycle()
     }
   }
@@ -137,11 +146,31 @@ class YoutubeLikeBehavior<V : View>(context: Context,
       parent.onLayoutChild(child, layoutDirection)
     }
 
-    parentHeight = parent.height
+    (0 until parent.childCount).forEach {
+      val view = parent.getChildAt(it)
+      if (view is BottomNavigationView) {
+        bottomNavigationHeight = view.height
+      }
+    }
+
+    scrollOutAnimator = ObjectAnimator.ofFloat(child, "translationY", 0f,
+      bottomNavigationHeight.toFloat()).apply {
+      duration = ANIMATION_DURATION
+      interpolator = AccelerateDecelerateInterpolator()
+      addListener(animationListener)
+    }
+    scrollInAnimator = ObjectAnimator.ofFloat(child, "translationY",
+      bottomNavigationHeight.toFloat(), 0f).apply {
+      duration = ANIMATION_DURATION
+      interpolator = AccelerateDecelerateInterpolator()
+      addListener(animationListener)
+    }
+
+    parentHeight = parent.height - bottomNavigationHeight
     parentWidth = parent.width
     val halfChildHeight = child.height / 2f
     shrinkMarginTop = Math.min(parentHeight,
-        (parentHeight - (halfChildHeight * (1 + shrinkRate))).toInt()) - marginBottom
+      (parentHeight - (halfChildHeight * (1 + shrinkRate))).toInt()) - marginBottom
     // current(2017/01/11) support media width is "screen width" only
     leftMargin = Math.min(parentWidth, (child.width / 4f).toInt()) - marginRight
 
@@ -182,7 +211,7 @@ class YoutubeLikeBehavior<V : View>(context: Context,
   }
 
   override fun onInterceptTouchEvent(parent: CoordinatorLayout, child: V,
-      ev: MotionEvent): Boolean {
+    ev: MotionEvent): Boolean {
     if (!draggable) {
       return false
     }
@@ -210,7 +239,7 @@ class YoutubeLikeBehavior<V : View>(context: Context,
         initialX = ev.x.toInt()
         initialY = ev.y.toInt()
         ignoreEvents = activePointerId == MotionEvent.INVALID_POINTER_ID
-            && !parent.isPointInChildBounds(child, initialX, initialY)
+          && !parent.isPointInChildBounds(child, initialX, initialY)
       }
 
       else -> {
@@ -229,9 +258,9 @@ class YoutubeLikeBehavior<V : View>(context: Context,
     }
 
     return action == MotionEvent.ACTION_MOVE
-        && !ignoreEvents
-        && (state != STATE_DRAGGING || state != STATE_SHRINK_DRAGGING)
-        && (Math.abs(initialX - ev.x) > touchSlop || Math.abs(initialY - ev.y) > touchSlop)
+      && !ignoreEvents
+      && (state != STATE_DRAGGING || state != STATE_SHRINK_DRAGGING)
+      && (Math.abs(initialX - ev.x) > touchSlop || Math.abs(initialY - ev.y) > touchSlop)
   }
 
   override fun onTouchEvent(parent: CoordinatorLayout, child: V, ev: MotionEvent): Boolean {
@@ -261,11 +290,61 @@ class YoutubeLikeBehavior<V : View>(context: Context,
         touchSlop = it.touchSlop
       }
       if (Math.abs(initialX - ev.x) > touchSlop.toFloat()
-          || Math.abs(initialY - ev.y) > touchSlop.toFloat()) {
+        || Math.abs(initialY - ev.y) > touchSlop.toFloat()) {
         dragHelper?.captureChildView(child, ev.getPointerId(ev.actionIndex))
       }
     }
     return !ignoreEvents
+  }
+
+  private var animating = false
+  private var animatingDirection = 0
+
+  private val animationListener = object : AnimatorListenerAdapter() {
+    override fun onAnimationStart(animation: Animator?) {
+      animating = true
+    }
+
+    override fun onAnimationCancel(animation: Animator?) {
+      animating = true
+    }
+
+    override fun onAnimationEnd(animation: Animator?) {
+      animating = false
+    }
+  }
+
+  private lateinit var scrollOutAnimator: ObjectAnimator
+  private lateinit var scrollInAnimator: ObjectAnimator
+
+  override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout, child: V,
+    directTargetChild: View, target: View, nestedScrollAxes: Int, type: Int): Boolean {
+    return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL
+  }
+
+  override fun onNestedPreScroll(coordinatorLayout: CoordinatorLayout, child: V, target: View,
+    dx: Int, dy: Int, consumed: IntArray, type: Int) {
+    super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type)
+    if (animating) return
+
+    val direction = if (dy >= 0) SCROLL_DOWN else SCROLL_UP
+    if (animatingDirection == direction) return
+
+    animatingDirection = direction
+    if (direction == SCROLL_DOWN) {
+      scrollOutAnimation()
+    } else {
+      scrollInAnimation()
+    }
+  }
+
+  private fun scrollOutAnimation() {
+    // TODO: BottomNavigationのいちに依存させる
+    scrollOutAnimator.start()
+  }
+
+  private fun scrollInAnimation() {
+    scrollInAnimator.start()
   }
 
   private fun setStateInternal(@State state: Int) {
@@ -273,6 +352,17 @@ class YoutubeLikeBehavior<V : View>(context: Context,
       return
     }
     this.state = state
+    if (state == STATE_EXPANDED) {
+      viewRef.get()?.let {
+        it.translationY = 0f
+      }
+    } else if (state == STATE_SHRINK) {
+      if (animatingDirection == SCROLL_DOWN) {
+        viewRef.get()?.let {
+          it.translationY = bottomNavigationHeight.toFloat()
+        }
+      }
+    }
     if (!(this.state == STATE_DRAGGING || this.state == STATE_SETTLING)) {
       this.listener?.onBehaviorStateChanged(state)
     }
