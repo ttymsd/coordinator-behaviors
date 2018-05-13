@@ -36,7 +36,8 @@ class BottomNavigationBehavior<V : View>(context: Context?, attrs: AttributeSet?
     @SuppressWarnings("unchecked")
     fun <V : View> from(view: V?): BottomNavigationBehavior<V>? {
       if (view == null) return null
-      val params = view.layoutParams as? CoordinatorLayout.LayoutParams ?: throw IllegalArgumentException(
+      val params = view.layoutParams as? CoordinatorLayout.LayoutParams
+        ?: throw IllegalArgumentException(
           "The view is not a child of CoordinatorLayout")
       return params.behavior as? BottomNavigationBehavior<V>
     }
@@ -67,13 +68,13 @@ class BottomNavigationBehavior<V : View>(context: Context?, attrs: AttributeSet?
     parent.onLayoutChild(child, layoutDirection)
     ViewCompat.offsetTopAndBottom(child, parentHeight - child.height)
     scrollOutAnimator = ObjectAnimator.ofFloat(child, "translationY", 0f,
-        child.height.toFloat()).apply {
+      child.height.toFloat()).apply {
       duration = ANIMATION_DURATION
       interpolator = AccelerateDecelerateInterpolator()
       addListener(animationListener)
     }
     scrollInAnimator = ObjectAnimator.ofFloat(child, "translationY",
-        child.height.toFloat(), 0f).apply {
+      child.height.toFloat(), 0f).apply {
       duration = ANIMATION_DURATION
       interpolator = AccelerateDecelerateInterpolator()
       addListener(animationListener)
@@ -82,15 +83,16 @@ class BottomNavigationBehavior<V : View>(context: Context?, attrs: AttributeSet?
   }
 
   override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout, child: V,
-      directTargetChild: View, target: View, nestedScrollAxes: Int, type: Int): Boolean {
+    directTargetChild: View, target: View, nestedScrollAxes: Int, type: Int): Boolean {
     return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL
   }
 
-  override fun onNestedScroll(coordinatorLayout: CoordinatorLayout, child: V, target: View,
-      dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int, type: Int) {
+  override fun onNestedPreScroll(coordinatorLayout: CoordinatorLayout, child: V, target: View,
+    dx: Int, dy: Int, consumed: IntArray, type: Int) {
+    super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type)
     if (animating) return
 
-    val direction = if (dyUnconsumed >= 0) SCROLL_DOWN else SCROLL_UP
+    val direction = if (dy >= 0) SCROLL_DOWN else SCROLL_UP
     if (animatingDirection == direction) return
 
     animatingDirection = direction
