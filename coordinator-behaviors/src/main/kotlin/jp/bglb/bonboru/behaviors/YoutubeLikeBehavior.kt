@@ -80,9 +80,9 @@ class YoutubeLikeBehavior<V : View>(context: Context,
   private var dragHelper: ViewDragHelper? = null
 
   @State var state = STATE_EXPANDED
+  var draggable = true
   private var activePointerId = MotionEvent.INVALID_POINTER_ID
   private var ignoreEvents = false
-  private var draggable = true
   private var initialX = 0
   private var initialY = 0
 
